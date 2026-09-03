@@ -30,7 +30,25 @@ easy-open-search:
   address: 127.0.0.1:9200
   global-config:
     process-index-mode: manual   # manual | not_smoothly
+    db-config:
+      id-type: uuid              # none | uuid(UUIDv7) | customize
 ```
+
+```java
+@IndexId(type = IdType.UUID) // 插入时自动生成 UUIDv7；也可只配全局 id-type
+private String id;
+```
+
+### 自定义 SQL（@OsSelect）
+
+```java
+public interface ArticleMapper extends BaseMapper<Article> {
+    @OsSelect("SELECT * FROM article WHERE status = #{status}")
+    List<Article> listByStatus(@Param("status") Integer status);
+}
+```
+
+支持返回 `T` / `List<T>` / `Map` / `List<Map>` / 数值类型；仅支持 `#{}`，不支持 `${}` / XML。
 
 ```java
 @MapperScan("com.example.mapper")

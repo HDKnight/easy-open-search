@@ -1,6 +1,7 @@
 package org.dromara.easyos.spring.boot;
 
 import org.dromara.easyos.mapper.BaseMapper;
+import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
@@ -41,10 +42,11 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
     protected Set<BeanDefinitionHolder> doScan(String... basePackages) {
         Set<BeanDefinitionHolder> beanDefinitions = super.doScan(basePackages);
         if (beanDefinitions.isEmpty()) {
-            logger.warn("No Easy-OS mapper was found in '" + Arrays.toString(basePackages)
-                    + "'. Please check @MapperScan configuration.");
+            logger.warn("[easy-os] 未扫描到 Mapper，请检查 @MapperScan 包路径: " + Arrays.toString(basePackages));
         } else {
             processBeanDefinitions(beanDefinitions);
+            logger.info("[easy-os] Mapper 扫描完成: packages=" + Arrays.toString(basePackages)
+                    + ", count=" + beanDefinitions.size());
         }
         return beanDefinitions;
     }
@@ -55,10 +57,12 @@ public class ClassPathMapperScanner extends ClassPathBeanDefinitionScanner {
             String mapperInterface = definition.getBeanClassName();
             definition.getConstructorArgumentValues().clear();
             definition.getConstructorArgumentValues().addGenericArgumentValue(mapperInterface);
+            // 让容器/工具链知道 FactoryBean 产出的真实类型（对齐 MyBatis）
+            definition.setAttribute(FactoryBean.OBJECT_TYPE_ATTRIBUTE, mapperInterface);
             definition.setBeanClass(MapperFactoryBean.class);
             definition.setAutowireMode(AbstractBeanDefinition.AUTOWIRE_BY_TYPE);
             definition.setPrimary(true);
-            logger.debug("Registered MapperFactoryBean for mapper interface: " + mapperInterface);
+            logger.info("[easy-os] 注册 MapperFactoryBean: " + mapperInterface);
         }
     }
 

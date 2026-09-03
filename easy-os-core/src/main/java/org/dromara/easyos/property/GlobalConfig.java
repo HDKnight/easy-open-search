@@ -1,5 +1,6 @@
 package org.dromara.easyos.property;
 
+import org.dromara.easyos.annotation.rely.IdType;
 import org.dromara.easyos.enums.ProcessIndexMode;
 
 public class GlobalConfig {
@@ -43,7 +44,8 @@ public class GlobalConfig {
     public static class DbConfig {
         private String indexPrefix = "";
         private boolean mapUnderscoreToCamelCase = true;
-        private String idType = "none";
+        /** 全局主键策略；注解 type=NONE 时回退到此值。UUID 实际生成 UUIDv7。 */
+        private IdType idType = IdType.NONE;
 
         public String getIndexPrefix() {
             return indexPrefix;
@@ -61,11 +63,11 @@ public class GlobalConfig {
             this.mapUnderscoreToCamelCase = mapUnderscoreToCamelCase;
         }
 
-        public String getIdType() {
+        public IdType getIdType() {
             return idType;
         }
 
-        public void setIdType(String idType) {
+        public void setIdType(IdType idType) {
             this.idType = idType;
         }
     }

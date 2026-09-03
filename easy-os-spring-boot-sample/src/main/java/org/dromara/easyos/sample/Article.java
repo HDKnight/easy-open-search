@@ -6,12 +6,13 @@ import org.dromara.easyos.annotation.IndexField;
 import org.dromara.easyos.annotation.IndexId;
 import org.dromara.easyos.annotation.IndexName;
 import org.dromara.easyos.annotation.Score;
+import org.dromara.easyos.annotation.rely.IdType;
 
 @Setter
 @Getter
 @IndexName("article")
 public class Article {
-    @IndexId
+    @IndexId(type = IdType.UUID)
     private String id;
     @IndexField(type = "text")
     private String title;

@@ -35,6 +35,11 @@ public class JdbcExecutor {
         if (properties.getPassword() != null) {
             props.setProperty("password", properties.getPassword());
         }
+        if (properties.isTrustSelfSigned()) {
+            // sql-jdbc: accept demo/self-signed HTTPS certs (dev only)
+            props.setProperty("trustSelfSigned", "true");
+            props.setProperty("hostnameVerification", "false");
+        }
         try {
             Class.forName("org.opensearch.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -44,12 +49,17 @@ public class JdbcExecutor {
     }
 
     public void probe() {
+        String jdbcUrl = JdbcUrlBuilder.build(properties);
+        log.info("[easy-os] 探测 OpenSearch SQL 连通性: {}", jdbcUrl);
         try (Connection connection = openConnection()) {
             SqlProbe.verify(connection);
             probed = true;
+            log.info("[easy-os] OpenSearch SQL 探测成功");
         } catch (EasyOsException e) {
+            log.error("[easy-os] OpenSearch SQL 探测失败（请确认已安装 opensearch-sql 插件）", e);
             throw e;
         } catch (Exception e) {
+            log.error("[easy-os] OpenSearch SQL 探测失败: {}", e.getMessage());
             throw translate(e);
         }
     }
@@ -66,9 +76,7 @@ public class JdbcExecutor {
 
     public List<Map<String, Object>> queryMaps(org.dromara.easyos.sql.BoundSql boundSql) {
         ensureProbed();
-        if (properties.isPrintSql()) {
-            log.info("SQL: {} | params={}", boundSql.getSql(), boundSql.getParams());
-        }
+        long startNs = System.nanoTime();
         try (Connection connection = openConnection();
              PreparedStatement ps = connection.prepareStatement(boundSql.getSql())) {
             List<Object> params = boundSql.getParams();
@@ -76,11 +84,24 @@ public class JdbcExecutor {
                 ps.setObject(i + 1, params.get(i));
             }
             try (ResultSet rs = ps.executeQuery()) {
-                return ResultSetMapper.toMaps(rs);
+                List<Map<String, Object>> rows = ResultSetMapper.toMaps(rs);
+                if (properties.isPrintSql()) {
+                    log.info("[easy-os] SQL: {} | params={} | cost={}ms | rows={}",
+                            boundSql.getSql(), boundSql.getParams(), elapsedMs(startNs), rows.size());
+                }
+                return rows;
             }
         } catch (Exception e) {
+            if (properties.isPrintSql()) {
+                log.warn("[easy-os] SQL failed: {} | params={} | cost={}ms",
+                        boundSql.getSql(), boundSql.getParams(), elapsedMs(startNs));
+            }
             throw translate(e);
         }
+    }
+
+    private static long elapsedMs(long startNs) {
+        return (System.nanoTime() - startNs) / 1_000_000L;
     }
 
     public Long queryLong(org.dromara.easyos.sql.BoundSql boundSql) {
@@ -100,12 +121,19 @@ public class JdbcExecutor {
 
     private RuntimeException translate(Exception e) {
         String msg = e.getMessage() == null ? "" : e.getMessage().toLowerCase();
+        if (msg.contains("pkix") || msg.contains("sslhandshake") || msg.contains("certpath")) {
+            log.error("[easy-os] HTTPS 证书校验失败。开发环境请设置 easy-open-search.trust-self-signed=true");
+            return new EasyOsException(
+                    "OpenSearch JDBC SSL failed (self-signed?). Set easy-open-search.trust-self-signed=true", e);
+        }
         if (msg.contains("sql") && (msg.contains("plugin") || msg.contains("404") || msg.contains("not found"))) {
+            log.error("[easy-os] 疑似缺少 SQL 插件，请检查: bin/opensearch-plugin list / install opensearch-sql");
             return EasyOsException.sqlPluginMissing();
         }
         if (e instanceof EasyOsException) {
             return (EasyOsException) e;
         }
+        log.error("[easy-os] JDBC 执行失败: {}", e.getMessage());
         return new EasyOsException("OpenSearch JDBC execution failed: " + e.getMessage(), e);
     }
 }

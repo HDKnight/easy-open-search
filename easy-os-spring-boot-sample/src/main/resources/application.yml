@@ -1,3 +1,6 @@
+server:
+  port: 8052
+
 easy-open-search:
   enable: true
   print-sql: true
@@ -12,3 +15,9 @@ easy-open-search:
     process-index-mode: not_smoothly
     db-config:
       map-underscore-to-camel-case: true
+      # none | uuid | customize ；uuid 实际生成 UUIDv7
+      id-type: uuid
+
+logging:
+  level:
+    org.dromara.easyos: INFO

@@ -23,15 +23,22 @@ public class ManualIndexProcessor implements IndexProcessor {
 
     @Override
     public void processOnStartup(Class<?> entityClass) {
-        log.info("process-index-mode=manual, skip auto index for {}", entityClass.getSimpleName());
+        EntityMeta meta = EntityMeta.of(entityClass, properties);
+        log.info("[easy-os] process-index-mode=manual，跳过自动建索引: name={}, entity={}（可调用 mapper.createIndex()）",
+                meta.getIndexName(), entityClass.getSimpleName());
     }
 
     @Override
     public boolean createIndex(Class<?> entityClass) {
+        EntityMeta meta = EntityMeta.of(entityClass, properties);
+        String indexName = meta.getIndexName();
+        log.info("[easy-os] 手动创建索引: name={}, entity={}", indexName, entityClass.getSimpleName());
         try {
             client.indices().create(schemaBuilder.buildCreateRequest(entityClass, properties));
+            log.info("[easy-os] 手动创建索引成功: name={}", indexName);
             return true;
         } catch (IOException e) {
+            log.error("[easy-os] 手动创建索引失败: name={}", indexName, e);
             throw new EasyOsException("createIndex failed", e);
         }
     }
@@ -39,10 +46,14 @@ public class ManualIndexProcessor implements IndexProcessor {
     @Override
     public boolean deleteIndex(Class<?> entityClass) {
         EntityMeta meta = EntityMeta.of(entityClass, properties);
+        String indexName = meta.getIndexName();
+        log.warn("[easy-os] 删除索引: name={}, entity={}", indexName, entityClass.getSimpleName());
         try {
-            client.indices().delete(d -> d.index(meta.getIndexName()));
+            client.indices().delete(d -> d.index(indexName));
+            log.info("[easy-os] 删除索引成功: name={}", indexName);
             return true;
         } catch (IOException e) {
+            log.error("[easy-os] 删除索引失败: name={}", indexName, e);
             throw new EasyOsException("deleteIndex failed", e);
         }
     }
@@ -51,8 +62,11 @@ public class ManualIndexProcessor implements IndexProcessor {
     public boolean existsIndex(Class<?> entityClass) {
         EntityMeta meta = EntityMeta.of(entityClass, properties);
         try {
-            return schemaBuilder.exists(client, meta.getIndexName());
+            boolean exists = schemaBuilder.exists(client, meta.getIndexName());
+            log.debug("[easy-os] 检查索引是否存在: name={}, exists={}", meta.getIndexName(), exists);
+            return exists;
         } catch (IOException e) {
+            log.error("[easy-os] 检查索引失败: name={}", meta.getIndexName(), e);
             throw new EasyOsException("existsIndex failed", e);
         }
     }
