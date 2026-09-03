@@ -10,7 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Creates index if missing; if present, deletes then recreates (data loss possible).
+ * Startup: create index when missing.
+ * Explicit recreate still available via {@link #createIndex(Class)} after delete.
  */
 public class NotSmoothlyIndexProcessor implements IndexProcessor {
     private static final Logger log = LoggerFactory.getLogger(NotSmoothlyIndexProcessor.class);
@@ -30,11 +31,11 @@ public class NotSmoothlyIndexProcessor implements IndexProcessor {
         try {
             boolean exists = schemaBuilder.exists(client, meta.getIndexName());
             if (exists) {
-                log.warn("not_smoothly mode: deleting existing index {} then recreating", meta.getIndexName());
-                client.indices().delete(d -> d.index(meta.getIndexName()));
+                log.info("Index {} already exists, skip auto-create (not_smoothly)", meta.getIndexName());
+                return;
             }
             client.indices().create(schemaBuilder.buildCreateRequest(entityClass, properties));
-            log.info("Index {} created (not_smoothly)", meta.getIndexName());
+            log.info("Index {} created automatically (not_smoothly)", meta.getIndexName());
         } catch (IOException e) {
             throw new EasyOsException("not_smoothly index process failed for " + meta.getIndexName(), e);
         }

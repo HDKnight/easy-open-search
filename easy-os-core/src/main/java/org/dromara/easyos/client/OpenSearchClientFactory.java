@@ -3,13 +3,18 @@ package org.dromara.easyos.client;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.dromara.easyos.exception.EasyOsException;
 import org.dromara.easyos.property.EasyOsProperties;
 import org.opensearch.client.RestClient;
 import org.opensearch.client.json.jackson.JacksonJsonpMapper;
 import org.opensearch.client.opensearch.OpenSearchClient;
 import org.opensearch.client.transport.rest_client.RestClientTransport;
+
+import javax.net.ssl.SSLContext;
 
 public final class OpenSearchClientFactory {
     private OpenSearchClientFactory() {
@@ -34,12 +39,31 @@ public final class OpenSearchClientFactory {
                         if (properties.getUsername() != null && properties.getPassword() != null) {
                             httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                         }
+                        if ("https".equalsIgnoreCase(scheme)) {
+                            configureSsl(httpClientBuilder, properties.isTrustSelfSigned());
+                        }
                         return httpClientBuilder;
                     })
                     .build();
             return new OpenSearchClient(new RestClientTransport(restClient, new JacksonJsonpMapper()));
         } catch (Exception e) {
             throw new EasyOsException("Failed to create OpenSearchClient", e);
+        }
+    }
+
+    private static void configureSsl(HttpAsyncClientBuilder httpClientBuilder, boolean trustSelfSigned) {
+        try {
+            SSLContextBuilder sslContextBuilder = SSLContextBuilder.create();
+            if (trustSelfSigned) {
+                sslContextBuilder.loadTrustMaterial(null, (chain, authType) -> true);
+            }
+            SSLContext sslContext = sslContextBuilder.build();
+            httpClientBuilder.setSSLContext(sslContext);
+            if (trustSelfSigned) {
+                httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+            }
+        } catch (Exception e) {
+            throw new EasyOsException("Failed to configure HTTPS for OpenSearchClient", e);
         }
     }
 }

@@ -19,7 +19,7 @@ public class ManualIndexProcessor implements IndexProcessor {
 
     @Override
     public void processOnStartup(Class<?> entityClass) {
-        // manual mode: no automatic index processing
+        log.info("process-index-mode=manual, skip auto index for {}", entityClass.getSimpleName());
     }
 
     @Override

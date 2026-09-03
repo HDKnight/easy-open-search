@@ -1,11 +1,14 @@
 easy-open-search:
   enable: true
   print-sql: true
-  schema: http
-  address: 127.0.0.1:19300
-  # username: admin
-  # password: admin
+  schema: https
+  address: 127.0.0.1:9206
+  username: admin
+  password: admin
+  trust-self-signed: true
   global-config:
-    process-index-mode: manual
+    # manual: 启动不建索引，需调用 articleMapper.createIndex()
+    # not_smoothly: 启动时自动创建缺失索引
+    process-index-mode: not_smoothly
     db-config:
       map-underscore-to-camel-case: true

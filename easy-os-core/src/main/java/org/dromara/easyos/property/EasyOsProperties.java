@@ -8,6 +8,10 @@ public class EasyOsProperties {
     private String address = "127.0.0.1:9200";
     private String username;
     private String password;
+    /**
+     * Trust self-signed HTTPS certificates (dev only). Default true for https convenience.
+     */
+    private boolean trustSelfSigned = true;
     private GlobalConfig globalConfig = new GlobalConfig();
 
     public boolean isEnable() {
@@ -64,6 +68,14 @@ public class EasyOsProperties {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public boolean isTrustSelfSigned() {
+        return trustSelfSigned;
+    }
+
+    public void setTrustSelfSigned(boolean trustSelfSigned) {
+        this.trustSelfSigned = trustSelfSigned;
     }
 
     public GlobalConfig getGlobalConfig() {
