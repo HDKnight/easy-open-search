@@ -16,10 +16,18 @@ import java.lang.reflect.Proxy;
 import java.lang.reflect.Type;
 
 public class MapperFactoryBean<T> implements FactoryBean<T>, ApplicationContextAware {
-    private final Class<T> mapperInterface;
+
+    private Class<T> mapperInterface;
     private ApplicationContext applicationContext;
 
+    public MapperFactoryBean() {
+    }
+
     public MapperFactoryBean(Class<T> mapperInterface) {
+        this.mapperInterface = mapperInterface;
+    }
+
+    public void setMapperInterface(Class<T> mapperInterface) {
         this.mapperInterface = mapperInterface;
     }
 
@@ -31,19 +39,24 @@ public class MapperFactoryBean<T> implements FactoryBean<T>, ApplicationContextA
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     public T getObject() {
+        if (mapperInterface == null) {
+            throw new IllegalStateException("mapperInterface must not be null");
+        }
         Class<?> entityClass = resolveEntityClass(mapperInterface);
         EasyOsProperties properties = applicationContext.getBean(EasyOsProperties.class);
         JdbcExecutor jdbcExecutor = applicationContext.getBean(JdbcExecutor.class);
         DocumentWriter documentWriter = applicationContext.getBean(DocumentWriter.class);
         IndexProcessor indexProcessor = applicationContext.getBean(IndexProcessor.class);
         BaseMapperImpl<?> impl = new BaseMapperImpl(entityClass, properties, jdbcExecutor, documentWriter, indexProcessor);
-        indexProcessor.processOnStartup(entityClass);
+        if (properties.getGlobalConfig() != null) {
+            indexProcessor.processOnStartup(entityClass);
+        }
         return (T) Proxy.newProxyInstance(
                 mapperInterface.getClassLoader(),
                 new Class[]{mapperInterface},
                 (proxy, method, args) -> {
-                    if (method.getDeclaringClass() == Object.class) {
-                        return method.invoke(impl, args);
+                    if (args == null) {
+                        return method.invoke(impl);
                     }
                     return method.invoke(impl, args);
                 });
@@ -58,7 +71,8 @@ public class MapperFactoryBean<T> implements FactoryBean<T>, ApplicationContextA
                 }
             }
         }
-        throw new IllegalStateException("Cannot resolve entity type from " + mapperInterface.getName());
+        throw new IllegalStateException("Cannot resolve entity type from " + mapperInterface.getName()
+                + ". Mapper must extend BaseMapper<Entity>.");
     }
 
     @Override
