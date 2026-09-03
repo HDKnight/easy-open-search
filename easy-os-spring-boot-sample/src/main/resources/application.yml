@@ -1,0 +1,11 @@
+easy-open-search:
+  enable: true
+  print-sql: true
+  schema: http
+  address: 127.0.0.1:9200
+  # username: admin
+  # password: admin
+  global-config:
+    process-index-mode: manual
+    db-config:
+      map-underscore-to-camel-case: true
