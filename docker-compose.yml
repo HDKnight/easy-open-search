@@ -1,0 +1,33 @@
+services:
+  opensearch:
+    image: opensearchproject/opensearch:3.8.0
+    container_name: opensearch
+    restart: unless-stopped
+    environment:
+      - cluster.name=docker-cluster
+      - node.name=opensearch-node
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${OPENSEARCH_INITIAL_ADMIN_PASSWORD}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    volumes:
+      - ./data:/usr/share/opensearch/data
+      - ./config:/usr/share/opensearch/config
+      - ./logs:/usr/share/opensearch/logs
+    ports:
+      # Host 9200 is occupied by Windows Elasticsearch service; use 9201 instead
+      - "9206:9200"
+      - "9606:9600"
+    networks:
+      - opensearch-net
+
+networks:
+  opensearch-net:
+    driver: bridge
