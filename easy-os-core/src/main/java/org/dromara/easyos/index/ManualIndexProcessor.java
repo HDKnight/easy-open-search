@@ -4,10 +4,14 @@ import org.dromara.easyos.exception.EasyOsException;
 import org.dromara.easyos.property.EasyOsProperties;
 import org.dromara.easyos.toolkit.EntityMeta;
 import org.opensearch.client.opensearch.OpenSearchClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class ManualIndexProcessor implements IndexProcessor {
+    private static final Logger log = LoggerFactory.getLogger(ManualIndexProcessor.class);
+
     private final OpenSearchClient client;
     private final EasyOsProperties properties;
     private final IndexSchemaBuilder schemaBuilder = new IndexSchemaBuilder();
