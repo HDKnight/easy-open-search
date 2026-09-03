@@ -27,11 +27,35 @@
 
 ```yaml
 easy-open-search:
+  # 是否启用
+  enable: true
+  # 是否打印 Banner
+  banner: true
+  # 是否打印 SQL（含耗时）
+  print-sql: true
+  # http / https
+  schema: http
+  # host:port
   address: 127.0.0.1:9200
+  # 账号（可缺省）
+  username: admin
+  password: admin
+  # 信任自签名证书（仅开发环境）
+  trust-self-signed: true
   global-config:
-    process-index-mode: manual   # manual | not_smoothly
+    # manual | not_smoothly（smoothly 未实现）
+    process-index-mode: manual
+    # 异步建索引是否阻塞主线程（预留）
+    async-process-index-blocking: true
+    # 是否分布式（预留）
+    distributed: true
     db-config:
-      id-type: uuid              # none | uuid(UUIDv7) | customize
+      # 索引名前缀
+      index-prefix: ""
+      # 下划线转驼峰
+      map-underscore-to-camel-case: true
+      # none | uuid(UUIDv7) | customize
+      id-type: uuid
 ```
 
 ```java

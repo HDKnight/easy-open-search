@@ -6,7 +6,8 @@ package org.dromara.easyos.annotation.rely;
  */
 public enum IdType {
     /**
-     * 未在注解上显式指定时回退到全局配置；生效为 NONE 时由 OpenSearch 自动生成 _id。
+     * 未在注解上显式指定时回退到全局配置 {@code easy-open-search.global-config.db-config.id-type}；
+     * 生效为 NONE 时由 OpenSearch 自动生成 _id。
      */
     NONE,
     /**
