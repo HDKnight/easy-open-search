@@ -48,7 +48,7 @@ List<Article> list = articleMapper.selectList(wrapper);
 ## 构建
 
 ```powershell
-$env:JAVA_HOME="D:\Program Files\Java\jdk1.8.0_202"
+$env:JAVA_HOME="D:\Java\jdk1.8.0_202"
 $env:Path="$env:JAVA_HOME\bin;D:\Program Files\Apache\maven-3.9.10\bin;$env:Path"
 cd F:\code\java\workspace\opensource\easy-open-search
 mvn clean test
