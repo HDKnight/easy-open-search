@@ -79,7 +79,7 @@ public class DocumentWriter {
         boolean mapUnderscore = properties.getGlobalConfig().getDbConfig().isMapUnderscoreToCamelCase();
         Map<String, Object> doc = meta.toDocument(entity, mapUnderscore);
         try {
-            UpdateResponse<Map> response = client.update(u -> u
+            UpdateResponse<?> response = client.update(u -> u
                     .index(meta.getIndexName())
                     .id(String.valueOf(id))
                     .doc(doc), Map.class);

@@ -45,7 +45,19 @@ wrapper.match(Article::getTitle, "功夫")
 List<Article> list = articleMapper.selectList(wrapper);
 ```
 
+## 构建
+
+```powershell
+$env:JAVA_HOME="D:\Program Files\Java\jdk1.8.0_202"
+$env:Path="$env:JAVA_HOME\bin;D:\Program Files\Apache\maven-3.9.10\bin;$env:Path"
+cd F:\code\java\workspace\opensource\easy-open-search
+mvn clean test
+```
+
+项目已提供 `.mvn/jvm.config`（限制堆、关闭 CompressedOops），避免部分 Windows/JDK8 环境出现 `Chunk::new` 原生 OOM。
+
 ## OpenSearch SQL 插件（必读）
+
 
 JDBC **驱动已随本项目依赖引入**；**服务端 SQL 插件**需集群侧可用。
 

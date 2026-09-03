@@ -7,9 +7,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.List;
-import java.util.Map;
-
 @SpringBootApplication
 @MapperScan("org.dromara.easyos.sample")
 public class SampleApplication {
@@ -21,6 +18,8 @@ public class SampleApplication {
     CommandLineRunner demo(ArticleMapper articleMapper) {
         return args -> {
             // Example only — requires a running OpenSearch with SQL plugin.
+            // Uncomment to try against a local cluster:
+            //
             // articleMapper.createIndex();
             // Article article = new Article();
             // article.setId("1");
@@ -28,20 +27,25 @@ public class SampleApplication {
             // article.setStatus(1);
             // article.setStarNum(10);
             // articleMapper.insert(article);
+            //
+            // LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
+            // wrapper.match(Article::getTitle, "功夫")
+            //         .eq(Article::getStatus, 1)
+            //         .orderByScoreDesc();
+            // articleMapper.selectList(wrapper);
+            //
+            // LambdaQueryWrapper<Article> agg = new LambdaQueryWrapper<>();
+            // agg.select(Article::getTitle)
+            //         .selectCount("cnt")
+            //         .selectSum(Article::getStarNum, "sumStar")
+            //         .eq(Article::getStatus, 1)
+            //         .groupBy(Article::getTitle);
+            // articleMapper.selectMaps(agg);
 
-            LambdaQueryWrapper<Article> wrapper = new LambdaQueryWrapper<>();
-            wrapper.match(Article::getTitle, "功夫")
-                    .eq(Article::getStatus, 1)
-                    .orderByScoreDesc();
-            // List<Article> list = articleMapper.selectList(wrapper);
-
-            LambdaQueryWrapper<Article> agg = new LambdaQueryWrapper<>();
-            agg.select(Article::getTitle)
-                    .selectCount("cnt")
-                    .selectSum(Article::getStarNum, "sumStar")
-                    .eq(Article::getStatus, 1)
-                    .groupBy(Article::getTitle);
-            // List<Map<String, Object>> maps = articleMapper.selectMaps(agg);
+            // keep mapper injected so context wiring is verified at startup
+            if (articleMapper == null) {
+                throw new IllegalStateException("ArticleMapper was not injected");
+            }
         };
     }
 }

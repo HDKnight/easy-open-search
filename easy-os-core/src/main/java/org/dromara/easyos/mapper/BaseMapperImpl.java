@@ -153,12 +153,16 @@ public class BaseMapperImpl<T> implements BaseMapper<T> {
 
     @Override
     public PageInfo<T> page(LambdaQueryWrapper<T> wrapper, int pageNum, int pageSize) {
-        Long total = selectCount(wrapper);
         wrapper.setMapUnderscoreToCamelCase(mapUnderscore());
-        wrapper.limit(pageSize);
-        wrapper.offset(Math.max(pageNum - 1, 0) * pageSize);
-        List<T> list = selectList(wrapper);
-        return new PageInfo<>(total == null ? 0 : total, pageNum, pageSize, list);
+        Long total = selectCount(wrapper);
+        int safePageNum = Math.max(pageNum, 1);
+        int safePageSize = Math.max(pageSize, 1);
+        QueryAst ast = wrapper.toAst(indexName());
+        ast.setLimit(safePageSize);
+        ast.setOffset((safePageNum - 1) * safePageSize);
+        BoundSql bound = sqlRenderer.render(ast);
+        List<T> list = ResultSetMapper.mapsToEntities(jdbcExecutor.queryMaps(bound), entityClass, mapUnderscore());
+        return new PageInfo<>(total == null ? 0 : total, safePageNum, safePageSize, list);
     }
 
     @Override

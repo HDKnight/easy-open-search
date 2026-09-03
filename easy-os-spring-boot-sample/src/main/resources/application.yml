@@ -2,7 +2,7 @@ easy-open-search:
   enable: true
   print-sql: true
   schema: http
-  address: 127.0.0.1:9200
+  address: 127.0.0.1:19300
   # username: admin
   # password: admin
   global-config:
