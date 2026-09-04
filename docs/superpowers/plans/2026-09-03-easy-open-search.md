@@ -1,4 +1,4 @@
-# easy-open-search Implementation Plan
+﻿# easy-open-search Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
@@ -76,7 +76,7 @@ easy-open-search/
 - Create: 复制 design spec 到新仓库 `docs/superpowers/specs/`
 
 **Interfaces:**
-- Produces: 可 `mvn -q -DskipTests package` 的空多模块工程；`groupId=org.dromara.easy-open-search`，`version=0.1.0-SNAPSHOT`
+- Produces: 可 `mvn -q -DskipTests package` 的空多模块工程；`groupId=io.github.hdknight`，`version=0.1.0-SNAPSHOT`
 
 - [ ] **Step 1: 创建同级目录并 init git**
 

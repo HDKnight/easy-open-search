@@ -1,0 +1,50 @@
+# ---------------------------------------------------------------------------
+# easy-os-spring-boot-sample 示例配置（所有 easy-open-search 项均含中文说明）
+# ---------------------------------------------------------------------------
+
+server:
+  # HTTP 服务端口
+  port: 8052
+
+easy-open-search:
+  # 是否启用 easy-open-search，默认 true
+  enable: true
+  # 是否打印启动 Banner，默认 true
+  banner: true
+  # 是否打印 SQL（含参数、耗时、行数），默认 true
+  print-sql: true
+  # 连接协议：http / https
+  schema: https
+  # OpenSearch 地址，格式 host:port
+  address: 127.0.0.1:9206
+  # 用户名（可缺省）
+  username: admin
+  # 密码（可缺省）
+  password: admin
+  # 是否信任自签名 HTTPS 证书（仅建议开发环境）
+  trust-self-signed: true
+  global-config:
+    # 索引处理模式：
+    #   manual       - 启动不建索引，需调用 mapper.createIndex()
+    #   not_smoothly - 启动时自动创建缺失索引
+    #   smoothly     - 平滑迁移（当前版本未实现）
+    process-index-mode: not_smoothly
+    # 异步处理索引时是否阻塞主线程（预留，默认 true）
+    async-process-index-blocking: true
+    # 是否分布式环境（预留，默认 true）
+    distributed: true
+    db-config:
+      # 索引名前缀，例如 daily_，可缺省
+      index-prefix: ""
+      # 是否开启下划线与驼峰互转，默认 true
+      map-underscore-to-camel-case: true
+      # 全局主键策略（注解 @IndexId type=NONE 时回退到此值）：
+      #   none      - 由 OpenSearch 自动生成 _id
+      #   uuid      - 框架生成 UUIDv7（时间有序）
+      #   customize - 必须由业务自行传入 id
+      id-type: uuid
+
+logging:
+  level:
+    # easy-os 框架日志级别
+    org.dromara.easyos: INFO

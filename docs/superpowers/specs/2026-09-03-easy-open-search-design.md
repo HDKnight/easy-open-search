@@ -1,9 +1,9 @@
-# easy-open-search 设计规格
+﻿# easy-open-search 设计规格
 
 **日期：** 2026-09-03  
 **状态：** 已认可（2026-09-03）  
 **项目目录（实现时创建）：** `F:\code\java\workspace\opensource\easy-open-search`（与 `easy-es` 同级）  
-**Maven groupId：** `org.dromara.easy-open-search`（建议）  
+**Maven groupId：** `io.github.hdknight`（建议）  
 **Java 包名：** `org.dromara.easyos`
 
 ---
