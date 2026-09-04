@@ -6,7 +6,7 @@
 
     <groupId>io.github.hdknight</groupId>
     <artifactId>easy-open-search</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <packaging>pom</packaging>
     <name>easy-open-search</name>
     <description>OpenSearch-only ORM: write via opensearch-java, read via sql-jdbc</description>

@@ -13,7 +13,7 @@
 
     <groupId>io.github.hdknight</groupId>
     <artifactId>easy-os-spring-boot3-sample</artifactId>
-    <version>0.1.2</version>
+    <version>0.1.3</version>
     <name>easy-os-spring-boot3-sample</name>
     <description>Sample for easy-os-spring-boot3-starter</description>
 

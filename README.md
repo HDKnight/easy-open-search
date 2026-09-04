@@ -25,7 +25,7 @@
 <dependency>
   <groupId>io.github.hdknight</groupId>
   <artifactId>easy-os-spring-boot-starter</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
 </dependency>
 <!-- Boot 2.7 必须显式覆盖，否则会出现 NoClassDefFoundError: jakarta/json/JsonException -->
 <dependency>
@@ -46,7 +46,7 @@
 <dependency>
   <groupId>io.github.hdknight</groupId>
   <artifactId>easy-os-spring-boot3-starter</artifactId>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
 </dependency>
 ```
 
