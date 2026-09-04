@@ -22,6 +22,17 @@
         <dependency>
             <groupId>org.opensearch.client</groupId>
             <artifactId>opensearch-java</artifactId>
+            <exclusions>
+                <!-- 使用 JacksonJsonpMapper，不需要 JSON-B/Yasson -->
+                <exclusion>
+                    <groupId>org.eclipse</groupId>
+                    <artifactId>yasson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish</groupId>
+                    <artifactId>jakarta.json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.opensearch.client</groupId>
@@ -40,11 +51,17 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.14</version>
         </dependency>
         <dependency>
             <groupId>org.opensearch.driver</groupId>
             <artifactId>opensearch-sql-jdbc</artifactId>
+            <exclusions>
+                <!-- 非 AWS 场景不需要；旧 aws-sdk/ion-java 易被安全扫描标红。若需 SigV4 请自行加回 aws-java-sdk-core -->
+                <exclusion>
+                    <groupId>com.amazonaws</groupId>
+                    <artifactId>aws-java-sdk-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

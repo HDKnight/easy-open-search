@@ -151,6 +151,18 @@ bin/opensearch-plugin install opensearch-sql
 仅影响 **`easy-os-spring-boot-starter`（Boot 2）**。  
 请使用上文「快速开始」中的显式依赖；或改用 **`easy-os-spring-boot3-starter`**。
 
+## 依赖安全说明
+
+库侧已做：
+
+- 统一 **Jackson 2.17.x**（覆盖 Boot 2.7 / 旧传递依赖）
+- 钉住 **SnakeYAML 1.33**、**commons-codec**
+- 排除 **aws-java-sdk-core**（默认非 AWS；若需 SigV4 请自行加回）
+- 排除 **yasson / glassfish jakarta.json**（本库用 Jackson JSON-P）
+
+业务侧仍在 Boot 2.7 时，建议在 `dependencyManagement` 中同样 import `jackson-bom`。  
+**Spring / Tomcat 5.3 / 9.0 线本身已 EOL**，IDE 红盾可能无法完全消掉，长期请迁 **Boot 3 + `easy-os-spring-boot3-starter`**。
+
 ## 索引模式
 
 | 模式 | 行为 |

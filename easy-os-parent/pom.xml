@@ -43,7 +43,11 @@
         <opensearch-java.version>2.18.0</opensearch-java.version>
         <opensearch-sql-jdbc.version>1.4.0.1</opensearch-sql-jdbc.version>
         <spring-boot.version>2.7.18</spring-boot.version>
-        <jackson.version>2.15.4</jackson.version>
+        <!-- 统一 Jackson，覆盖 Boot 2.7 / AWS SDK 传递的旧 2.13.x -->
+        <jackson.version>2.17.2</jackson.version>
+        <snakeyaml.version>1.33</snakeyaml.version>
+        <commons-codec.version>1.17.1</commons-codec.version>
+        <httpclient.version>4.5.14</httpclient.version>
         <lombok.version>1.18.42</lombok.version>
         <junit.version>5.9.3</junit.version>
         <slf4j.version>1.7.36</slf4j.version>
@@ -101,6 +105,30 @@
                 <scope>import</scope>
             </dependency>
 
+            <!-- 放在 Boot BOM 之后，强制覆盖易受攻击/过时的传递依赖版本 -->
+            <dependency>
+                <groupId>com.fasterxml.jackson</groupId>
+                <artifactId>jackson-bom</artifactId>
+                <version>${jackson.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>jakarta.json</groupId>
                 <artifactId>jakarta.json-api</artifactId>
@@ -115,6 +143,21 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-cbor</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
