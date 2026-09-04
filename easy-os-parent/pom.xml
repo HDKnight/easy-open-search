@@ -48,7 +48,6 @@
         <snakeyaml.version>1.33</snakeyaml.version>
         <commons-codec.version>1.17.1</commons-codec.version>
         <httpclient.version>4.5.14</httpclient.version>
-        <lombok.version>1.18.42</lombok.version>
         <junit.version>5.9.3</junit.version>
         <slf4j.version>1.7.36</slf4j.version>
         <!-- Override Spring Boot 2.7 BOM (1.1.6 / javax.json) for opensearch-java -->
@@ -161,11 +160,6 @@
                 <version>${jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
@@ -190,13 +184,6 @@
                         <source>${java.version}</source>
                         <target>${java.version}</target>
                         <encoding>UTF-8</encoding>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${lombok.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
                     </configuration>
                 </plugin>
                 <plugin>

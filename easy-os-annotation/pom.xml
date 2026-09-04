@@ -14,14 +14,6 @@
     <artifactId>easy-os-annotation</artifactId>
     <name>easy-os-annotation</name>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>

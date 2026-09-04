@@ -301,7 +301,8 @@ JDBC 驱动：[opensearch-project/sql-jdbc](https://github.com/opensearch-projec
 - `org.opensearch.client:opensearch-java`（及所需 transport）
 - OpenSearch SQL JDBC 驱动（Maven 坐标以官方最新为准，打进 core/starter）
 - Spring Boot Starter：**首期对齐 Spring Boot 2.7.x**（与当前 Easy-Es 一致）；JDK 8+；Boot 3 支持放二期
-- Jackson、lombok
+- Jackson
+- SLF4J
 
 ---
 
