@@ -1,9 +1,9 @@
-# easy-open-search 设计规格
+﻿# easy-open-search 设计规格
 
 **日期：** 2026-09-03  
 **状态：** 已认可（2026-09-03）  
 **项目目录（实现时创建）：** `F:\code\java\workspace\opensource\easy-open-search`（与 `easy-es` 同级）  
-**Maven groupId：** `org.dromara.easy-open-search`（建议）  
+**Maven groupId：** `io.github.hdknight`（建议）  
 **Java 包名：** `org.dromara.easyos`
 
 ---
@@ -301,7 +301,8 @@ JDBC 驱动：[opensearch-project/sql-jdbc](https://github.com/opensearch-projec
 - `org.opensearch.client:opensearch-java`（及所需 transport）
 - OpenSearch SQL JDBC 驱动（Maven 坐标以官方最新为准，打进 core/starter）
 - Spring Boot Starter：**首期对齐 Spring Boot 2.7.x**（与当前 Easy-Es 一致）；JDK 8+；Boot 3 支持放二期
-- Jackson、lombok
+- Jackson
+- SLF4J
 
 ---
 

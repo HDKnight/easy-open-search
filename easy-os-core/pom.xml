@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.dromara.easy-open-search</groupId>
+        <groupId>io.github.hdknight</groupId>
         <artifactId>easy-os-parent</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.1.3</version>
         <relativePath>../easy-os-parent/pom.xml</relativePath>
     </parent>
 
@@ -16,12 +16,23 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.dromara.easy-open-search</groupId>
+            <groupId>io.github.hdknight</groupId>
             <artifactId>easy-os-annotation</artifactId>
         </dependency>
         <dependency>
             <groupId>org.opensearch.client</groupId>
             <artifactId>opensearch-java</artifactId>
+            <exclusions>
+                <!-- 使用 JacksonJsonpMapper，不需要 JSON-B/Yasson -->
+                <exclusion>
+                    <groupId>org.eclipse</groupId>
+                    <artifactId>yasson</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.glassfish</groupId>
+                    <artifactId>jakarta.json</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.opensearch.client</groupId>
@@ -30,19 +41,27 @@
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>
+            <version>${jakarta-json.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.parsson</groupId>
             <artifactId>parsson</artifactId>
+            <version>${parsson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.5.14</version>
         </dependency>
         <dependency>
             <groupId>org.opensearch.driver</groupId>
             <artifactId>opensearch-sql-jdbc</artifactId>
+            <exclusions>
+                <!-- 非 AWS 场景不需要；旧 aws-sdk/ion-java 易被安全扫描标红。若需 SigV4 请自行加回 aws-java-sdk-core -->
+                <exclusion>
+                    <groupId>com.amazonaws</groupId>
+                    <artifactId>aws-java-sdk-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -51,11 +70,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

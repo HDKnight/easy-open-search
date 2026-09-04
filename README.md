@@ -1,4 +1,4 @@
-# easy-open-search
+﻿# easy-open-search
 
 面向 **OpenSearch only** 的轻量 ORM（类 MyBatis-Plus）。
 
@@ -10,18 +10,43 @@
 
 | 模块 | 说明 |
 |------|------|
-| `easy-os-annotation` | `@IndexName` / `@IndexId` / `@IndexField` / `@Score` |
+| `easy-os-annotation` | `@IndexName` / `@IndexId` / `@IndexField` / `@Score` / `@OsSelect` |
 | `easy-os-core` | Wrapper、SQL 渲染、JDBC、Client 写、索引托管 |
-| `easy-os-spring-boot-starter` | Boot 2.7 自动配置 + `@MapperScan` |
-| `easy-os-spring-boot-sample` | 示例 |
+| `easy-os-spring-boot-starter` | **Spring Boot 2.7** 自动配置 + `@MapperScan`（Java 8+） |
+| `easy-os-spring-boot3-starter` | **Spring Boot 3.x** 自动配置 + `@MapperScan`（Java 17+） |
+| `easy-os-spring-boot-sample` | Boot 2 示例 |
+| `easy-os-spring-boot3-sample` | Boot 3 示例 |
 
 ## 快速开始
 
+**Spring Boot 2.7：**
+
 ```xml
 <dependency>
-  <groupId>org.dromara.easy-open-search</groupId>
+  <groupId>io.github.hdknight</groupId>
   <artifactId>easy-os-spring-boot-starter</artifactId>
-  <version>0.1.0-SNAPSHOT</version>
+  <version>0.1.3</version>
+</dependency>
+<!-- Boot 2.7 必须显式覆盖，否则会出现 NoClassDefFoundError: jakarta/json/JsonException -->
+<dependency>
+  <groupId>jakarta.json</groupId>
+  <artifactId>jakarta.json-api</artifactId>
+  <version>2.1.3</version>
+</dependency>
+<dependency>
+  <groupId>org.eclipse.parsson</groupId>
+  <artifactId>parsson</artifactId>
+  <version>1.1.5</version>
+</dependency>
+```
+
+**Spring Boot 3.x（推荐，无需再手写 jakarta.json）：**
+
+```xml
+<dependency>
+  <groupId>io.github.hdknight</groupId>
+  <artifactId>easy-os-spring-boot3-starter</artifactId>
+  <version>0.1.3</version>
 </dependency>
 ```
 
@@ -121,14 +146,31 @@ bin/opensearch-plugin install opensearch-sql
 
 启动时若探测失败，异常信息会包含上述安装提示。
 
+## Spring Boot 2.7 集成注意（jakarta.json）
+
+仅影响 **`easy-os-spring-boot-starter`（Boot 2）**。  
+请使用上文「快速开始」中的显式依赖；或改用 **`easy-os-spring-boot3-starter`**。
+
+## 依赖安全说明
+
+库侧已做：
+
+- 统一 **Jackson 2.17.x**（覆盖 Boot 2.7 / 旧传递依赖）
+- 钉住 **SnakeYAML 1.33**、**commons-codec**
+- 排除 **aws-java-sdk-core**（默认非 AWS；若需 SigV4 请自行加回）
+- 排除 **yasson / glassfish jakarta.json**（本库用 Jackson JSON-P）
+
+业务侧仍在 Boot 2.7 时，建议在 `dependencyManagement` 中同样 import `jackson-bom`。  
+**Spring / Tomcat 5.3 / 9.0 线本身已 EOL**，IDE 红盾可能无法完全消掉，长期请迁 **Boot 3 + `easy-os-spring-boot3-starter`**。
+
 ## 索引模式
 
 | 模式 | 行为 |
 |------|------|
 | `manual` | 启动不自动处理，调用 `createIndex()` 等 |
-| `not_smoothly` | 启动按实体建索引；已存在则删建（会丢数据） |
+| `not_smoothly` | 启动按实体建索引；已存在则跳过创建 |
 | `smoothly` | 二期 |
 
 ## 设计文档
 
-见 `docs/superpowers/specs/2026-09-03-easy-open-search-design.md`
+见 `./docs/superpowers/specs/2026-09-03-easy-open-search-design.md`

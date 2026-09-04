@@ -11,24 +11,42 @@
         <relativePath>../easy-os-parent/pom.xml</relativePath>
     </parent>
 
-    <artifactId>easy-os-spring-boot-starter</artifactId>
-    <name>easy-os-spring-boot-starter</name>
+    <artifactId>easy-os-spring-boot3-starter</artifactId>
+    <name>easy-os-spring-boot3-starter</name>
+    <description>Spring Boot 3.x starter for easy-open-search (Java 17+)</description>
+
+    <properties>
+        <java.version>17</java.version>
+        <maven.compiler.release>17</maven.compiler.release>
+        <spring-boot3.version>3.3.5</spring-boot3.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- 覆盖 parent 中的 Boot 2.7 BOM，仅对本模块生效 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot3.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>io.github.hdknight</groupId>
             <artifactId>easy-os-core</artifactId>
         </dependency>
-        <!-- 显式钉版本：防止被 Spring Boot 2.7 BOM 降级为 jakarta.json-api 1.1.x（包名仍是 javax.json，会导致 NoClassDefFoundError: jakarta/json/JsonException） -->
+        <!-- Boot 3 BOM 已管理 2.x，一般无需业务侧再覆盖 -->
         <dependency>
             <groupId>jakarta.json</groupId>
             <artifactId>jakarta.json-api</artifactId>
-            <version>${jakarta-json.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.parsson</groupId>
             <artifactId>parsson</artifactId>
-            <version>${parsson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -56,6 +74,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>17</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

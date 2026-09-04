@@ -1,0 +1,86 @@
+{
+  "properties": [
+    {
+      "name": "easy-open-search.enable",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否启用 easy-open-search，默认开启。"
+    },
+    {
+      "name": "easy-open-search.banner",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否打印启动 Banner，默认开启。"
+    },
+    {
+      "name": "easy-open-search.print-sql",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否打印执行的 SQL（含参数、耗时、行数），默认开启。"
+    },
+    {
+      "name": "easy-open-search.schema",
+      "type": "java.lang.String",
+      "defaultValue": "http",
+      "description": "连接协议：http / https，默认 http。"
+    },
+    {
+      "name": "easy-open-search.address",
+      "type": "java.lang.String",
+      "defaultValue": "127.0.0.1:9200",
+      "description": "OpenSearch 地址，格式 host:port，默认 127.0.0.1:9200。"
+    },
+    {
+      "name": "easy-open-search.username",
+      "type": "java.lang.String",
+      "description": "用户名，可缺省。"
+    },
+    {
+      "name": "easy-open-search.password",
+      "type": "java.lang.String",
+      "description": "密码，可缺省。"
+    },
+    {
+      "name": "easy-open-search.trust-self-signed",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否信任自签名 HTTPS 证书（仅建议开发环境），默认 true。"
+    },
+    {
+      "name": "easy-open-search.global-config.process-index-mode",
+      "type": "org.dromara.easyos.enums.ProcessIndexMode",
+      "defaultValue": "manual",
+      "description": "索引处理模式：manual（手动）/ not_smoothly（启动自动创建缺失索引）；smoothly 预留未实现。"
+    },
+    {
+      "name": "easy-open-search.global-config.async-process-index-blocking",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "异步处理索引时是否阻塞主线程，默认阻塞（预留配置）。"
+    },
+    {
+      "name": "easy-open-search.global-config.distributed",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否分布式环境，默认为是（预留配置）。"
+    },
+    {
+      "name": "easy-open-search.global-config.db-config.index-prefix",
+      "type": "java.lang.String",
+      "defaultValue": "",
+      "description": "索引名前缀，例如 daily_，可缺省。"
+    },
+    {
+      "name": "easy-open-search.global-config.db-config.map-underscore-to-camel-case",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "是否开启下划线与驼峰互转，默认开启。"
+    },
+    {
+      "name": "easy-open-search.global-config.db-config.id-type",
+      "type": "org.dromara.easyos.annotation.rely.IdType",
+      "defaultValue": "none",
+      "description": "全局主键策略：none（OpenSearch 自动生成）/ uuid（UUIDv7）/ customize（业务传入）；注解 @IndexId type=NONE 时回退到此值。"
+    }
+  ]
+}
